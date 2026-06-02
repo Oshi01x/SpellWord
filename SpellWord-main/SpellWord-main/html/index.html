@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spell Words</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #2c3e50; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .box { background: white; color: #333; width: 350px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .letters { font-size: 32px; color: #3498db; font-weight: bold; margin-bottom: 20px; letter-spacing: 5px; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 12px; cursor: pointer; background: #27ae60; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; transition: background 0.3s; }
+        button:hover { background: #2ecc71; }
+        #result { margin-top: 15px; font-weight: bold; height: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Бұны шешіңіз!</h2>
+    <div id="word-display" class="letters">...</div>
+    <input type="text" id="user-guess" placeholder="Жауабынды осында жаз" autofocus>
+    <button onclick="check()">Жіберу</button>
+    <p id="result"></p>
+</div>
+
+<script>
+    // Сөздер қоры: қиындық деңгейіне қарай бөлінген
+    const wordBank = {
+        "easy": ["cat", "dog", "sun", "book", "ball", "python"],        // Жеңіл сөздер
+        "medium": ["garden", "winter", "forest", "orange", "player", "coding"],  // Орташа сөздер
+        "hard": ["adventure", "knowledge", "structure", "interface", "algorithm", "monday"] // Қиын сөздер
+    };
+
+let correctWord = "";
+
+function nextWord() {
+    // 1. Барлық сөздерді бір тізімге жинау
+    const allWords = [...wordBank.easy, ...wordBank.medium, ...wordBank.hard];
+    
+    // 2. Кездейсоқ бір сөзді таңдап алу
+    const original = allWords[Math.floor(Math.random() * allWords.length)].toLowerCase();
+    correctWord = original;
+
+    // 3. Әріптердің орнын араластыру
+    let scrambled = original.split('').sort(() => Math.random() - 0.5).join('');
+    
+    // Сөз араласпай қалса, функцияны қайта іске қосу
+    if (scrambled === original && original.length > 1) {
+        return nextWord(); 
+    }
+
+    // 4. Жаңа сөзді экранға шығару және енгізу өрісін тазалау
+    document.getElementById('word-display').innerText = scrambled.toUpperCase();
+    document.getElementById('result').innerText = "";
+    document.getElementById('user-guess').value = "";
+    document.getElementById('user-guess').focus();
+}
+
+function check() {
+    // Пайдаланушы жауабын бос орындарсыз кіші әріпке келтіру
+    const guess = document.getElementById('user-guess').value.trim().toLowerCase();
+    const resultElement = document.getElementById('result');
+
+    // Жауапты тексеру
+    if (guess === correctWord) {
+        resultElement.style.color = "#27ae60"; // Жасыл түс
+        resultElement.innerText = "✅ Бәрекелді!";
+        setTimeout(nextWord, 1500); // 1.5 секундтан кейін келесі сөз
+    } else {
+        resultElement.style.color = "#e74c3c"; // Қызыл түс
+        resultElement.innerText = "❌ Қате, тағы көр!";
+    }
+}
+
+// Ойынды алғаш рет іске қосу
+nextWord();
+</script>
+
+</body>
+</html>

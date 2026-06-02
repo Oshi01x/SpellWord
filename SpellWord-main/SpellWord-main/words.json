@@ -1,0 +1,5 @@
+{
+  "easy": ["cat", "dog", "sun", "book", "ball"],
+  "medium": ["garden", "winter", "forest", "orange", "player"],
+  "hard": ["adventure", "knowledge", "structure", "interface", "algorithm"]
+}
